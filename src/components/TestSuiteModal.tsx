@@ -12,6 +12,7 @@ import {
   FileCheck 
 } from 'lucide-react';
 import { formatCurrency } from '../utils/storage';
+import { sanitizeText, safeParseNumber, validateAndHealEvent } from '../utils/security';
 import { createInitialEvent, EVENT_PRESETS } from '../data/presets';
 import { TRANSLATIONS } from '../data/translations';
 import { Language, BudgetCategory, ChecklistTask } from '../types';
@@ -235,6 +236,34 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
         if (totalEarned !== 425000) throw new Error(`Expected 425000, got ${totalEarned}`);
       },
     },
+    {
+      category: 'Security & Sanitization',
+      name: 'Sanitizes dangerous XSS payloads and script tags',
+      run: () => {
+        const cleaned = sanitizeText('<script>alert("xss")</script>Test Event');
+        if (cleaned.includes('<script>')) throw new Error('Failed to sanitize script tag');
+      },
+    },
+    {
+      category: 'Security & Sanitization',
+      name: 'Defensive numeric parser clamps negative budgets and prevents NaN',
+      run: () => {
+        const parsed = safeParseNumber('invalid', 500);
+        if (parsed !== 500) throw new Error('Failed fallback on invalid number');
+        const clamped = safeParseNumber(-100, 0, 0);
+        if (clamped !== 0) throw new Error('Failed to clamp negative value');
+      },
+    },
+    {
+      category: 'Security & Sanitization',
+      name: 'Heals incomplete or corrupted stored events schema',
+      run: () => {
+        const healed = validateAndHealEvent({ id: 'test' });
+        if (!Array.isArray(healed.budgetItems) || !Array.isArray(healed.rsvps)) {
+          throw new Error('Failed to heal missing collections');
+        }
+      },
+    },
   ];
 
   const runAllTests = async () => {
@@ -260,14 +289,14 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
           status: 'passed',
           durationMs: Math.max(1, duration),
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         const duration = Math.round(performance.now() - startTime);
         executed.push({
           category: test.category,
           name: test.name,
           status: 'failed',
           durationMs: Math.max(1, duration),
-          message: err?.message || 'Assertion failed',
+          message: err instanceof Error ? err.message : 'Assertion failed',
         });
       }
       setResults([...executed, ...initialResults.slice(executed.length)]);
@@ -293,7 +322,12 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
   const totalCount = testDefinitions.length;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="test-suite-modal-title"
+    >
       <div className="bg-[var(--surface)] text-[var(--ink)] max-w-3xl w-full rounded-3xl border border-[var(--line)] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="p-6 border-b border-[var(--line)] flex items-center justify-between bg-[var(--surface-card)]">
@@ -303,7 +337,7 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-serif text-xl font-bold">
+                <h3 id="test-suite-modal-title" className="font-serif text-xl font-bold">
                   {lang === 'hi' ? 'सिस्टम टेस्ट सूट व सत्यापन' : 'HostMate Automated Test Suite'}
                 </h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1c5340]/15 text-[#1c5340] border border-[#1c5340]/30 font-bold">
@@ -331,6 +365,8 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
             <button
               onClick={onClose}
               className="p-2 text-[var(--muted)] hover:text-[var(--ink)] rounded-xl cursor-pointer"
+              title="Close Test Suite"
+              aria-label="Close Test Suite"
             >
               <X className="w-5 h-5" />
             </button>

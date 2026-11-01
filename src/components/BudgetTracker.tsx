@@ -94,7 +94,7 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
     setShowAddModal(false);
   };
 
-  const handleUpdateItemField = (id: string, field: keyof BudgetCategory, val: any) => {
+  const handleUpdateItemField = (id: string, field: keyof BudgetCategory, val: BudgetCategory[keyof BudgetCategory]) => {
     const updated = event.budgetItems.map((item) => {
       if (item.id === id) {
         return { ...item, [field]: val };

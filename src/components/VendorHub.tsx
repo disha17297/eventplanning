@@ -447,7 +447,7 @@ export const VendorHub: React.FC<VendorHubProps> = ({
                       <a
                         href={`https://wa.me/${vendor.phone.replace(/[^0-9]/g, '')}`}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-[#1B4332] hover:bg-[#1B4332]/90 text-white transition-colors shadow-xs"
                       >
                         <MessageCircle className="w-3 h-3 text-[#D4AF37]" />

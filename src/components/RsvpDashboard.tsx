@@ -81,7 +81,7 @@ export const RsvpDashboard: React.FC<RsvpDashboardProps> = ({
 
   const handleLaunchWhatsAppInvite = () => {
     const encoded = encodeURIComponent(inviteText);
-    window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank', 'noopener,noreferrer');
   };
 
   // Caterer summary message for WhatsApp

@@ -78,8 +78,8 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
       } else {
         setError(json.error || 'Failed to analyze budget');
       }
-    } catch (e: any) {
-      setError(e.message || 'Network error');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Network error');
     } finally {
       setIsLoading(false);
     }
@@ -108,8 +108,8 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
       } else {
         setError(json.error || 'Failed to generate ideas');
       }
-    } catch (e: any) {
-      setError(e.message || 'Network error');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Network error');
     } finally {
       setIsLoading(false);
     }
@@ -143,15 +143,20 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
       } else {
         setError(json.error || 'Failed to analyze vendor');
       }
-    } catch (e: any) {
-      setError(e.message || 'Network error');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Network error');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#1A1D20]/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-[#1A1D20]/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ai-advice-modal-title"
+    >
       <div className="bg-[#FAF8F5] rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#E2E8F0] relative flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#E2E8F0] shrink-0">
@@ -166,7 +171,7 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
                   HostMate Intelligence
                 </span>
               </div>
-              <h3 className="text-xl font-serif font-bold text-[#1A1D20]">{t.aiAdvisor.title}</h3>
+              <h3 id="ai-advice-modal-title" className="text-xl font-serif font-bold text-[#1A1D20]">{t.aiAdvisor.title}</h3>
               <p className="text-xs text-[#1A1D20]/65 mt-0.5">{t.aiAdvisor.tagline}</p>
             </div>
           </div>
@@ -174,6 +179,8 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
           <button
             onClick={onClose}
             className="p-1.5 text-[#1A1D20]/50 hover:text-[#1A1D20] rounded-lg hover:bg-black/5 transition-colors cursor-pointer"
+            title={t.common.close}
+            aria-label={t.common.close}
           >
             <X className="w-5 h-5" />
           </button>

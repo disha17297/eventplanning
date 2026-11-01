@@ -90,7 +90,7 @@ export const MemoryShagunVault: React.FC<MemoryShagunVaultProps> = ({
   const handleSendWhatsAppThankYou = (gift: GiftRecord) => {
     const message = gift.thankYouMessage || `Dear ${gift.guestName}, thank you for your warm presence and thoughtful blessings at ${event.title}! 🙏`;
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/?text=${encoded}`, '_blank', 'noopener,noreferrer');
     if (!gift.thankYouSent) {
       handleToggleThankYou(gift.id);
     }

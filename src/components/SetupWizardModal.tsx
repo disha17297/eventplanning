@@ -82,12 +82,18 @@ export const SetupWizardModal: React.FC<SetupWizardModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#1A1D20]/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-[#1A1D20]/75 backdrop-blur-md flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="setup-wizard-title"
+    >
       <div className="bg-[#FAF8F5] rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#D4AF37]/30 relative animate-in fade-in zoom-in-95 duration-150">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-[#1A1D20] p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors"
+          className="absolute top-5 right-5 text-slate-400 hover:text-[#1A1D20] p-1.5 rounded-lg hover:bg-slate-200/60 transition-colors cursor-pointer"
           title={t.common.close}
+          aria-label={t.common.close}
         >
           <X className="w-5 h-5" />
         </button>
@@ -101,7 +107,7 @@ export const SetupWizardModal: React.FC<SetupWizardModalProps> = ({
             <div className="text-[10px] uppercase font-bold tracking-widest text-[#9A813A]">
               HostMate Digital Concierge
             </div>
-            <h2 className="font-serif text-2xl font-bold text-[#1A1D20] leading-tight">
+            <h2 id="setup-wizard-title" className="font-serif text-2xl font-bold text-[#1A1D20] leading-tight">
               {t.wizard.modalTitle}
             </h2>
           </div>
@@ -110,14 +116,14 @@ export const SetupWizardModal: React.FC<SetupWizardModalProps> = ({
         {/* 3-Step Wizard Indicator */}
         <div className="flex items-center gap-2 mb-6">
           {[
-            { s: 1, label: lang === 'hi' ? '1. आयोजन प्रकार' : '1. Event Type' },
-            { s: 2, label: lang === 'hi' ? '2. तिथि व विवरण' : '2. Date & Title' },
-            { s: 3, label: lang === 'hi' ? '3. बजट व मेहमान' : '3. Budget & Caps' },
+            { s: 1 as const, label: lang === 'hi' ? '1. आयोजन प्रकार' : '1. Event Type' },
+            { s: 2 as const, label: lang === 'hi' ? '2. तिथि व विवरण' : '2. Date & Title' },
+            { s: 3 as const, label: lang === 'hi' ? '3. बजट व मेहमान' : '3. Budget & Caps' },
           ].map((item) => (
             <button
               key={item.s}
               type="button"
-              onClick={() => setStep(item.s as any)}
+              onClick={() => setStep(item.s)}
               className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-lg text-center transition-all ${
                 step === item.s
                   ? 'bg-[#1A1D20] text-white shadow-xs'

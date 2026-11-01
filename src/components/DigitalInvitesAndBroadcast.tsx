@@ -96,7 +96,7 @@ export const DigitalInvitesAndBroadcast: React.FC<DigitalInvitesAndBroadcastProp
 
   const handleOpenWhatsAppBroadcast = () => {
     const text = encodeURIComponent(getBroadcastText());
-    window.open(`https://wa.me/?text=${text}`, '_blank');
+    window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
   // Curated stay recommendations

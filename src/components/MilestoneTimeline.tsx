@@ -139,7 +139,13 @@ export const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({
       });
       const data = await res.json();
       if (data.success && data.data?.timeline) {
-        const newRunSheet: RunSheetItem[] = data.data.timeline.map((item: any, idx: number) => ({
+        const newRunSheet: RunSheetItem[] = (data.data.timeline as Array<{
+          time: string;
+          activity: string;
+          leadPerson?: string;
+          notes?: string;
+          critical?: boolean;
+        }>).map((item, idx: number) => ({
           id: `ai-run-${idx + 1}-${Date.now()}`,
           time: item.time,
           activity: item.activity,
@@ -152,8 +158,8 @@ export const MilestoneTimeline: React.FC<MilestoneTimelineProps> = ({
       } else {
         setAiError(data.error || 'Failed to generate schedule');
       }
-    } catch (err: any) {
-      setAiError(err.message || 'Network error');
+    } catch (err: unknown) {
+      setAiError(err instanceof Error ? err.message : 'Network error');
     } finally {
       setIsAiLoading(false);
     }

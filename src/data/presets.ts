@@ -1,4 +1,4 @@
-import { BudgetCategory, ChecklistTask, EventType, RunSheetItem, Vendor } from '../types';
+import { BudgetCategory, ChecklistTask, EventType, RunSheetItem, Vendor, Currency, EventData } from '../types';
 
 export interface EventPreset {
   type: EventType;
@@ -275,7 +275,14 @@ export const EVENT_PRESETS: Record<EventType, EventPreset> = {
   },
 };
 
-export function createInitialEvent(presetType: EventType, customTitle?: string, customDate?: string, customBudget?: number, customGuests?: number, currency: any = '₹'): any {
+export function createInitialEvent(
+  presetType: EventType,
+  customTitle?: string,
+  customDate?: string,
+  customBudget?: number,
+  customGuests?: number,
+  currency: Currency = '₹'
+): EventData {
   const preset = EVENT_PRESETS[presetType] || EVENT_PRESETS.wedding;
   const budget = customBudget || preset.defaultBudget;
 

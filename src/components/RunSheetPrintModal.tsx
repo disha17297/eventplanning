@@ -51,7 +51,12 @@ export const RunSheetPrintModal: React.FC<RunSheetPrintModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#1A1D20]/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto bg-[#1A1D20]/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="runsheet-modal-title"
+    >
       <div className="bg-[#FAF8F5] rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[#E2E8F0] relative flex flex-col max-h-[90vh]">
         {/* Modal Controls (No print) */}
         <div className="no-print flex items-center justify-between pb-4 border-b border-[#E2E8F0]">
@@ -62,7 +67,7 @@ export const RunSheetPrintModal: React.FC<RunSheetPrintModalProps> = ({
                 {lang === 'hi' ? 'आधिकारिक रन शीट' : 'Official Run Sheet Exporter'}
               </span>
             </div>
-            <h3 className="text-xl font-serif font-bold text-[#1A1D20]">
+            <h3 id="runsheet-modal-title" className="text-xl font-serif font-bold text-[#1A1D20]">
               {lang === 'hi' ? 'डे-ऑफ रन शीट (प्रिंट व शेयर)' : 'Day-Of Run Sheet (Print & Export)'}
             </h3>
             <p className="text-xs text-[#1A1D20]/65 mt-0.5">
@@ -90,6 +95,8 @@ export const RunSheetPrintModal: React.FC<RunSheetPrintModalProps> = ({
             <button
               onClick={onClose}
               className="p-1.5 text-[#1A1D20]/50 hover:text-[#1A1D20] rounded-lg hover:bg-black/5 transition-colors ml-1 cursor-pointer"
+              title={t.common.close}
+              aria-label={t.common.close}
             >
               <X className="w-5 h-5" />
             </button>

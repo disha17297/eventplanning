@@ -301,7 +301,9 @@ export const Header: React.FC<HeaderProps> = ({
                         ? 'text-[var(--ink)] bg-[var(--surface)] border-[var(--line)] font-bold'
                         : 'text-[var(--muted)] hover:text-[var(--ink)] bg-[var(--surface)]/70 hover:bg-[var(--surface)] border-[var(--line)]/80'
                     }`}
+                    aria-haspopup="true"
                     aria-expanded={isDropdownOpen}
+                    aria-controls={`nav-dropdown-${group.id}`}
                     title={`${group.label}: Click to view modules`}
                   >
                     <CategoryIcon className={`w-3.5 h-3.5 shrink-0 ${isGroupActive ? 'text-[#b49a45]' : 'text-[var(--muted)]'}`} />
@@ -325,8 +327,10 @@ export const Header: React.FC<HeaderProps> = ({
                   {/* Dropdown Menu with Labels for this Category */}
                   {isDropdownOpen && (
                     <div 
+                      id={`nav-dropdown-${group.id}`}
                       className="absolute left-0 mt-1.5 w-64 bg-[var(--surface)] border border-[var(--line)] rounded-2xl shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150 backdrop-blur-md"
                       role="menu"
+                      aria-label={`${group.label} menu`}
                     >
                       <div className="px-3.5 py-1 text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider font-mono border-b border-[var(--line)]/50 pb-1.5 mb-1">
                         <span>{group.label}</span>

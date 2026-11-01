@@ -1,5 +1,6 @@
 import { EventData, EventType } from '../types';
 import { createInitialEvent } from '../data/presets';
+import { validateAndHealEvent, safeFormatCurrency } from './security';
 
 const STORAGE_KEY_ACTIVE = 'hostmate_active_event_id';
 const STORAGE_KEY_EVENTS = 'hostmate_all_events';
@@ -16,7 +17,7 @@ export function getStoredEvents(): EventData[] {
     }
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed;
+      return parsed.map((e) => validateAndHealEvent(e));
     }
     const initial = createInitialEvent('wedding');
     return [initial];
@@ -61,9 +62,5 @@ export function saveActiveEvent(updated: EventData): EventData[] {
 }
 
 export function formatCurrency(amount: number, currency: string = '₹'): string {
-  try {
-    return `${currency} ${Number(amount || 0).toLocaleString('en-IN')}`;
-  } catch {
-    return `${currency} ${amount}`;
-  }
+  return safeFormatCurrency(amount, currency);
 }
