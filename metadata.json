@@ -1,0 +1,6 @@
+{
+  "name": "HostMate",
+  "description": "GenAI-powered planning assistant with tagline 'Budget fit, event hit!' for organizing weddings, birthdays, and community events with smart budgets, milestone timelines, WhatsApp RSVPs, and centralized vendor management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

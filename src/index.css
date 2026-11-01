@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-landing: #fffdf9;
+    --bg-app: #fffdf9;
+    --surface: #ffffff;
+    --surface-card: #fffdf8;
+    --ink: #23201b;
+    --ink-secondary: #2a2418;
+    --muted: #6f675a;
+    --line: #e6dcc8;
+    --line-subtle: #efe7d7;
+    --gold: #b49a45;
+    --gold-app: #b78f3b;
+    --gold-hover: #c8a94b;
+    --gold-light: #fdfaf2;
+    --emerald-dark: #12392d;
+    --emerald-deep: #0c2a21;
+    --emerald-btn: #1c5340;
+    --emerald-btn-hover: #164233;
+    --rose-bg: #f1dcd3;
+    --rose-ink: #7a3a24;
+    --warn: #a5562a;
+    --night: #0d1220;
+  }
+
+  [data-theme="dark"] {
+    --bg-landing: #13110d;
+    --bg-app: #13110d;
+    --surface: #1d1a15;
+    --surface-card: #221e18;
+    --ink: #f3ecdc;
+    --ink-secondary: #ede5d5;
+    --muted: #a79d89;
+    --line: #3a3327;
+    --line-subtle: #2d271e;
+    --gold: #c8a94b;
+    --gold-app: #c8a94b;
+    --gold-hover: #dbbd5f;
+    --gold-light: #242017;
+    --emerald-dark: #0f2c23;
+    --emerald-deep: #081d17;
+    --emerald-btn: #1c5340;
+    --emerald-btn-hover: #23674f;
+    --rose-bg: #3a2a24;
+    --rose-ink: #f3c4b5;
+    --warn: #d97736;
+    --night: #080b14;
+  }
+
+  body {
+    font-family: 'Jost', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background-color: var(--bg-landing);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Cormorant Garamond', 'Noto Serif Devanagari', 'Playfair Display', Georgia, serif;
+  }
+
+  .font-sans {
+    font-family: 'Jost', 'Noto Sans Devanagari', system-ui, sans-serif;
+  }
+
+  .font-mono, .tabular-nums {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Monogram ring custom shadow specified in Section 3.3 */
+.hm-monogram {
+  box-shadow: 0 0 0 2.5px var(--surface), 0 0 0 4px var(--gold);
+}
+
+/* Remove all visible scrollbars across all browsers while preserving smooth scrolling */
+html,
+body,
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-break-inside-avoid {
+    break-inside: avoid;
+  }
+}
