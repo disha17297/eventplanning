@@ -333,7 +333,7 @@ export const MemoryShagunVault: React.FC<MemoryShagunVaultProps> = ({
                   </label>
                   <select
                     value={giftType}
-                    onChange={(e) => setGiftType(e.target.value as any)}
+                    onChange={(e) => setGiftType(e.target.value as GiftRecord['type'])}
                     className="w-full px-3 py-2 text-xs rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)]"
                   >
                     <option value="cash">{isHi ? 'नकद शगुन (Cash Shagun)' : 'Cash Shagun'}</option>

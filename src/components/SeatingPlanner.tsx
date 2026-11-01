@@ -530,7 +530,7 @@ export const SeatingPlanner: React.FC<SeatingPlannerProps> = ({
                 </label>
                 <select
                   value={newTableCategory}
-                  onChange={(e) => setNewTableCategory(e.target.value as any)}
+                  onChange={(e) => setNewTableCategory(e.target.value as 'family' | 'friends' | 'vip' | 'colleagues' | 'kids')}
                   className="w-full px-3 py-2 text-xs rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)]"
                 >
                   <option value="family">{isHi ? 'परिवार (Family)' : 'Family'}</option>

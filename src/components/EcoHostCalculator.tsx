@@ -265,13 +265,13 @@ export const EcoHostCalculator: React.FC<EcoHostCalculatorProps> = ({
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'buffet', label: 'Grand Buffet' },
-                  { id: 'plated', label: 'Plated Sit-Down' },
-                  { id: 'cocktail', label: 'Cocktail Snacks' },
+                  { id: 'buffet' as const, label: 'Grand Buffet' },
+                  { id: 'plated' as const, label: 'Plated Sit-Down' },
+                  { id: 'cocktail' as const, label: 'Cocktail Snacks' },
                 ].map((fmt) => (
                   <button
                     key={fmt.id}
-                    onClick={() => handleUpdateDemographics(adults, children, seniors, fmt.id as any)}
+                    onClick={() => handleUpdateDemographics(adults, children, seniors, fmt.id)}
                     className={`p-2 rounded-xl border text-xs font-semibold text-center transition-all cursor-pointer ${
                       mealType === fmt.id
                         ? 'border-[#1c5340] bg-[#1c5340]/10 text-[#1c5340] font-bold'

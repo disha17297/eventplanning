@@ -432,7 +432,7 @@ export const RsvpDashboard: React.FC<RsvpDashboardProps> = ({
                   </label>
                   <select
                     value={manualAttendance}
-                    onChange={(e) => setManualAttendance(e.target.value as any)}
+                    onChange={(e) => setManualAttendance(e.target.value as 'yes' | 'no')}
                     className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="yes">{t.rsvp.attending}</option>

@@ -396,7 +396,7 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
                         </span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {ideasData.decorIdeas.map((idea: any, idx: number) => (
+                        {ideasData.decorIdeas.map((idea: { title: string; estimatedCostTier?: string; description: string }, idx: number) => (
                           <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] shadow-xs">
                             <div className="font-semibold text-[#1A1D20] flex justify-between">
                               <span>{idea.title}</span>
@@ -416,7 +416,7 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
                         <div className="font-serif font-bold text-sm text-[#1A1D20]">
                           🍽️ {lang === 'hi' ? 'खान-पान के अनूठे ट्विस्ट' : 'Food & Drink Twists'}
                         </div>
-                        {ideasData.foodDrinkIdeas.map((f: any, idx: number) => (
+                        {ideasData.foodDrinkIdeas.map((f: { title: string; description: string }, idx: number) => (
                           <div key={idx} className="border-b border-slate-100 last:border-none pb-2 last:pb-0">
                             <div className="font-medium text-[#1A1D20]">{f.title}</div>
                             <div className="text-[11px] text-[#1A1D20]/65 mt-0.5">{f.description}</div>
@@ -430,7 +430,7 @@ export const AiAdviceModal: React.FC<AiAdviceModalProps> = ({
                         <div className="font-serif font-bold text-sm text-[#1A1D20]">
                           🎉 {lang === 'hi' ? 'गेम्स व मनोरंजन' : 'Icebreakers & Activities'}
                         </div>
-                        {ideasData.entertainmentIdeas.map((ent: any, idx: number) => (
+                        {ideasData.entertainmentIdeas.map((ent: { title: string; description: string }, idx: number) => (
                           <div key={idx} className="border-b border-slate-100 last:border-none pb-2 last:pb-0">
                             <div className="font-medium text-[#1A1D20]">{ent.title}</div>
                             <div className="text-[11px] text-[#1A1D20]/65 mt-0.5">{ent.description}</div>

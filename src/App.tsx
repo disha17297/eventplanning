@@ -1,22 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { Header } from './components/Header';
 import { LandingPage } from './components/LandingPage';
-import { SetupWizardModal } from './components/SetupWizardModal';
-import { BudgetTracker } from './components/BudgetTracker';
-import { MilestoneTimeline } from './components/MilestoneTimeline';
-import { RsvpDashboard } from './components/RsvpDashboard';
-import { RsvpPublicView } from './components/RsvpPublicView';
-import { VendorHub } from './components/VendorHub';
-import { AiAdviceModal } from './components/AiAdviceModal';
-import { TestSuiteModal } from './components/TestSuiteModal';
-import { SeatingPlanner } from './components/SeatingPlanner';
-import { SubEventsManager } from './components/SubEventsManager';
-import { DigitalInvitesAndBroadcast } from './components/DigitalInvitesAndBroadcast';
-import { LivePhotoWall } from './components/LivePhotoWall';
-import { AiAssistantExpanded } from './components/AiAssistantExpanded';
-import { ProAgencyHub } from './components/ProAgencyHub';
-import { MemoryShagunVault } from './components/MemoryShagunVault';
-import { EcoHostCalculator } from './components/EcoHostCalculator';
 import { EventData, Language, Vendor, GuestRsvp } from './types';
 import { TRANSLATIONS } from './data/translations';
 import { 
@@ -31,15 +15,36 @@ import {
   Calendar, 
   Users, 
   Wallet, 
-  Clock, 
-  CheckCircle2, 
   MessageCircle, 
-  ChevronRight,
-  TrendingUp,
-  ShieldCheck,
-  Compass,
-  ArrowLeft
+  Compass
 } from 'lucide-react';
+
+// Code-split tabs and modals with React.lazy for optimal bundle size and efficiency
+const SetupWizardModal = lazy(() => import('./components/SetupWizardModal').then(m => ({ default: m.SetupWizardModal })));
+const BudgetTracker = lazy(() => import('./components/BudgetTracker').then(m => ({ default: m.BudgetTracker })));
+const MilestoneTimeline = lazy(() => import('./components/MilestoneTimeline').then(m => ({ default: m.MilestoneTimeline })));
+const RsvpDashboard = lazy(() => import('./components/RsvpDashboard').then(m => ({ default: m.RsvpDashboard })));
+const RsvpPublicView = lazy(() => import('./components/RsvpPublicView').then(m => ({ default: m.RsvpPublicView })));
+const VendorHub = lazy(() => import('./components/VendorHub').then(m => ({ default: m.VendorHub })));
+const AiAdviceModal = lazy(() => import('./components/AiAdviceModal').then(m => ({ default: m.AiAdviceModal })));
+const TestSuiteModal = lazy(() => import('./components/TestSuiteModal').then(m => ({ default: m.TestSuiteModal })));
+const SeatingPlanner = lazy(() => import('./components/SeatingPlanner').then(m => ({ default: m.SeatingPlanner })));
+const SubEventsManager = lazy(() => import('./components/SubEventsManager').then(m => ({ default: m.SubEventsManager })));
+const DigitalInvitesAndBroadcast = lazy(() => import('./components/DigitalInvitesAndBroadcast').then(m => ({ default: m.DigitalInvitesAndBroadcast })));
+const LivePhotoWall = lazy(() => import('./components/LivePhotoWall').then(m => ({ default: m.LivePhotoWall })));
+const AiAssistantExpanded = lazy(() => import('./components/AiAssistantExpanded').then(m => ({ default: m.AiAssistantExpanded })));
+const ProAgencyHub = lazy(() => import('./components/ProAgencyHub').then(m => ({ default: m.ProAgencyHub })));
+const MemoryShagunVault = lazy(() => import('./components/MemoryShagunVault').then(m => ({ default: m.MemoryShagunVault })));
+const EcoHostCalculator = lazy(() => import('./components/EcoHostCalculator').then(m => ({ default: m.EcoHostCalculator })));
+
+const ComponentFallback: React.FC = () => (
+  <div className="w-full min-h-[320px] bg-[var(--surface)] rounded-2xl border border-[var(--line)] p-8 flex flex-col items-center justify-center space-y-3">
+    <div className="w-9 h-9 rounded-full bg-[#12100d] text-[#b49a45] flex items-center justify-center font-serif text-sm font-bold animate-pulse">
+      HM
+    </div>
+    <div className="h-3.5 w-32 bg-[var(--line)] rounded-full animate-pulse" />
+  </div>
+);
 
 export default function App() {
   const [lang, setLang] = useState<Language>(() => {
@@ -103,81 +108,85 @@ export default function App() {
     }
   }, []);
 
-  const handleToggleLang = () => {
+  const handleToggleLang = useCallback(() => {
     const nextLang = lang === 'en' ? 'hi' : 'en';
     setLang(nextLang);
     localStorage.setItem('hostmate_lang', nextLang);
-  };
+  }, [lang]);
 
-  const handleToggleTheme = () => {
+  const handleToggleTheme = useCallback(() => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
+  }, []);
 
-  const handleSwitchView = (mode: 'landing' | 'planner') => {
+  const handleSwitchView = useCallback((mode: 'landing' | 'planner') => {
     setViewMode(mode);
     localStorage.setItem('hostmate_view_mode', mode);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
-  const activeEvent = allEvents.find((e) => e.id === activeEventId) || allEvents[0] || null;
+  const activeEvent = useMemo(() => {
+    return allEvents.find((e) => e.id === activeEventId) || allEvents[0] || null;
+  }, [allEvents, activeEventId]);
 
-  const handleSelectEvent = (id: string) => {
+  const handleSelectEvent = useCallback((id: string) => {
     setActiveEventIdState(id);
     setActiveEventId(id);
-  };
+  }, []);
 
-  const handleUpdateActiveEvent = (updated: EventData) => {
+  const handleUpdateActiveEvent = useCallback((updated: EventData) => {
     const newEvents = saveActiveEvent(updated);
     setAllEvents(newEvents);
-  };
+  }, []);
 
-  const handleWizardComplete = (newEvent: EventData) => {
+  const handleWizardComplete = useCallback((newEvent: EventData) => {
     const newEvents = saveActiveEvent(newEvent);
     setAllEvents(newEvents);
     setActiveEventIdState(newEvent.id);
     setCurrentTab('budget');
     handleSwitchView('planner');
-  };
+  }, [handleSwitchView]);
 
   // RSVP submission from guest public form
-  const handleAddGuestRsvp = (rsvp: GuestRsvp) => {
+  const handleAddGuestRsvp = useCallback((rsvp: GuestRsvp) => {
     if (!activeEvent) return;
     const updated = {
       ...activeEvent,
       rsvps: [rsvp, ...activeEvent.rsvps],
     };
     handleUpdateActiveEvent(updated);
-  };
+  }, [activeEvent, handleUpdateActiveEvent]);
 
   // Open AI modal with specific tab
-  const handleOpenAiModal = (tab: 'budget' | 'ideas' | 'vendor', vendor?: Vendor) => {
+  const handleOpenAiModal = useCallback((tab: 'budget' | 'ideas' | 'vendor', vendor?: Vendor) => {
     setAiModalTab(tab);
     setSelectedVendorForAi(vendor || null);
     setShowAiModal(true);
-  };
+  }, []);
 
   const t = TRANSLATIONS[lang];
 
   // If in Public Guest RSVP Form Mode:
   if (publicRsvpMode && activeEvent) {
     return (
-      <RsvpPublicView
-        event={activeEvent}
-        lang={lang}
-        onAddRsvp={handleAddGuestRsvp}
-        onBackToDashboard={() => setPublicRsvpMode(false)}
-        isStandalone={true}
-      />
+      <Suspense fallback={<ComponentFallback />}>
+        <RsvpPublicView
+          event={activeEvent}
+          lang={lang}
+          onAddRsvp={handleAddGuestRsvp}
+          onBackToDashboard={() => setPublicRsvpMode(false)}
+          isStandalone={true}
+        />
+      </Suspense>
     );
   }
 
   // Calculate days left
-  let daysLeft = 0;
-  if (activeEvent?.date) {
+  const daysLeft = useMemo(() => {
+    if (!activeEvent?.date) return 0;
     const today = new Date();
     const eventD = new Date(activeEvent.date);
-    daysLeft = Math.ceil((eventD.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  }
+    return Math.ceil((eventD.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  }, [activeEvent?.date]);
 
   // VIEW 1: Marketing Landing Page
   if (viewMode === 'landing') {
@@ -199,20 +208,28 @@ export default function App() {
         />
 
         {/* Smart Setup Wizard Modal directly accessible from Landing */}
-        <SetupWizardModal
-          isOpen={showWizard}
-          onClose={() => setShowWizard(false)}
-          lang={lang}
-          onComplete={handleWizardComplete}
-          existingEvent={activeEvent}
-        />
+        {showWizard && (
+          <Suspense fallback={null}>
+            <SetupWizardModal
+              isOpen={showWizard}
+              onClose={() => setShowWizard(false)}
+              lang={lang}
+              onComplete={handleWizardComplete}
+              existingEvent={activeEvent}
+            />
+          </Suspense>
+        )}
 
         {/* Test Suite Modal */}
-        <TestSuiteModal
-          isOpen={showTestSuite}
-          onClose={() => setShowTestSuite(false)}
-          lang={lang}
-        />
+        {showTestSuite && (
+          <Suspense fallback={null}>
+            <TestSuiteModal
+              isOpen={showTestSuite}
+              onClose={() => setShowTestSuite(false)}
+              lang={lang}
+            />
+          </Suspense>
+        )}
       </>
     );
   }
@@ -304,106 +321,108 @@ export default function App() {
             </div>
           </div>
 
-          {/* Active Tab View */}
-          {currentTab === 'budget' && (
-            <BudgetTracker
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-              onOpenAiBudgetModal={() => handleOpenAiModal('budget')}
-            />
-          )}
+          {/* Active Tab View with Code-Splitting Suspense */}
+          <Suspense fallback={<ComponentFallback />}>
+            {currentTab === 'budget' && (
+              <BudgetTracker
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+                onOpenAiBudgetModal={() => handleOpenAiModal('budget')}
+              />
+            )}
 
-          {currentTab === 'tasks' && (
-            <MilestoneTimeline
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'tasks' && (
+              <MilestoneTimeline
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'rsvp' && (
-            <RsvpDashboard
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-              onPreviewPublicForm={() => setPublicRsvpMode(true)}
-            />
-          )}
+            {currentTab === 'rsvp' && (
+              <RsvpDashboard
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+                onPreviewPublicForm={() => setPublicRsvpMode(true)}
+              />
+            )}
 
-          {currentTab === 'subEvents' && (
-            <SubEventsManager
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'subEvents' && (
+              <SubEventsManager
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'seating' && (
-            <SeatingPlanner
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'seating' && (
+              <SeatingPlanner
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'microsite' && (
-            <DigitalInvitesAndBroadcast
-              event={activeEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'microsite' && (
+              <DigitalInvitesAndBroadcast
+                event={activeEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'liveWall' && (
-            <LivePhotoWall
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'liveWall' && (
+              <LivePhotoWall
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'vendors' && (
-            <VendorHub
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-              onReviewVendorAi={(v) => handleOpenAiModal('vendor', v)}
-            />
-          )}
+            {currentTab === 'vendors' && (
+              <VendorHub
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+                onReviewVendorAi={(v) => handleOpenAiModal('vendor', v)}
+              />
+            )}
 
-          {currentTab === 'aiAdvisor' && (
-            <AiAssistantExpanded
-              event={activeEvent}
-              lang={lang}
-              onOpenCoreAiModal={() => setShowAiModal(true)}
-            />
-          )}
+            {currentTab === 'aiAdvisor' && (
+              <AiAssistantExpanded
+                event={activeEvent}
+                lang={lang}
+                onOpenCoreAiModal={() => setShowAiModal(true)}
+              />
+            )}
 
-          {currentTab === 'vault' && (
-            <MemoryShagunVault
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'vault' && (
+              <MemoryShagunVault
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'ecoHost' && (
-            <EcoHostCalculator
-              event={activeEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'ecoHost' && (
+              <EcoHostCalculator
+                event={activeEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
 
-          {currentTab === 'pro' && (
-            <ProAgencyHub
-              event={activeEvent}
-              allEvents={allEvents}
-              onSelectEvent={handleSelectEvent}
-              onUpdateEvent={handleUpdateActiveEvent}
-              lang={lang}
-            />
-          )}
+            {currentTab === 'pro' && (
+              <ProAgencyHub
+                event={activeEvent}
+                allEvents={allEvents}
+                onSelectEvent={handleSelectEvent}
+                onUpdateEvent={handleUpdateActiveEvent}
+                lang={lang}
+              />
+            )}
+          </Suspense>
         </main>
       ) : (
         <div className="flex-1 flex items-center justify-center p-6">
@@ -426,32 +445,42 @@ export default function App() {
       )}
 
       {/* Smart Setup Wizard Modal */}
-      <SetupWizardModal
-        isOpen={showWizard}
-        onClose={() => setShowWizard(false)}
-        lang={lang}
-        onComplete={handleWizardComplete}
-        existingEvent={activeEvent}
-      />
+      {showWizard && (
+        <Suspense fallback={null}>
+          <SetupWizardModal
+            isOpen={showWizard}
+            onClose={() => setShowWizard(false)}
+            lang={lang}
+            onComplete={handleWizardComplete}
+            existingEvent={activeEvent}
+          />
+        </Suspense>
+      )}
 
       {/* AI Advice & Review Modal */}
-      {activeEvent && (
-        <AiAdviceModal
-          isOpen={showAiModal}
-          onClose={() => setShowAiModal(false)}
-          initialTab={aiModalTab}
-          event={activeEvent}
-          lang={lang}
-          selectedVendor={selectedVendorForAi}
-        />
+      {showAiModal && activeEvent && (
+        <Suspense fallback={null}>
+          <AiAdviceModal
+            isOpen={showAiModal}
+            onClose={() => setShowAiModal(false)}
+            initialTab={aiModalTab}
+            event={activeEvent}
+            lang={lang}
+            selectedVendor={selectedVendorForAi}
+          />
+        </Suspense>
       )}
 
       {/* Test Suite Modal */}
-      <TestSuiteModal
-        isOpen={showTestSuite}
-        onClose={() => setShowTestSuite(false)}
-        lang={lang}
-      />
+      {showTestSuite && (
+        <Suspense fallback={null}>
+          <TestSuiteModal
+            isOpen={showTestSuite}
+            onClose={() => setShowTestSuite(false)}
+            lang={lang}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

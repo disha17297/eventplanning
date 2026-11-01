@@ -366,14 +366,14 @@ export const AiAssistantExpanded: React.FC<AiAssistantExpandedProps> = ({
               </label>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'sangeet', label: 'Funny Sangeet Emcee' },
-                  { id: 'father_toast', label: 'Father of Bride Toast' },
-                  { id: 'birthday_games', label: 'Kids Birthday Games' },
-                  { id: 'welcome_emcee', label: 'Reception Welcome' },
+                  { id: 'sangeet' as const, label: 'Funny Sangeet Emcee' },
+                  { id: 'father_toast' as const, label: 'Father of Bride Toast' },
+                  { id: 'birthday_games' as const, label: 'Kids Birthday Games' },
+                  { id: 'welcome_emcee' as const, label: 'Reception Welcome' },
                 ].map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => handleSelectPreset(item.id as any)}
+                    onClick={() => handleSelectPreset(item.id)}
                     className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer ${
                       scriptType === item.id
                         ? 'border-[#1c5340] bg-[#1c5340]/10 text-[#1c5340] font-bold'
@@ -408,7 +408,7 @@ export const AiAssistantExpanded: React.FC<AiAssistantExpandedProps> = ({
                 </label>
                 <select
                   value={scriptTone}
-                  onChange={(e) => setScriptTone(e.target.value as any)}
+                  onChange={(e) => setScriptTone(e.target.value as 'humorous' | 'emotional' | 'royal' | 'high_energy')}
                   className="w-full px-2.5 py-1.5 text-xs rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)]"
                 >
                   <option value="humorous">Humorous & Playful</option>
@@ -424,7 +424,7 @@ export const AiAssistantExpanded: React.FC<AiAssistantExpandedProps> = ({
                 </label>
                 <select
                   value={scriptLanguage}
-                  onChange={(e) => setScriptLanguage(e.target.value as any)}
+                  onChange={(e) => setScriptLanguage(e.target.value as 'en' | 'hinglish' | 'hi')}
                   className="w-full px-2.5 py-1.5 text-xs rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)]"
                 >
                   <option value="hinglish">Hinglish (Party Style)</option>

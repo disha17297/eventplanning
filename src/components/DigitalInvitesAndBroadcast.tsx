@@ -343,15 +343,15 @@ export const DigitalInvitesAndBroadcast: React.FC<DigitalInvitesAndBroadcastProp
               </label>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'starting_soon', label: isHi ? '15 मिनट में शुरू' : 'Starting in 15 mins' },
-                  { id: 'venue_update', label: isHi ? 'स्थान / हॉल अपडेट' : 'Venue / Hall Shift' },
-                  { id: 'dress_code', label: isHi ? 'ड्रेस कोड स्मरण' : 'Dress Code Reminder' },
-                  { id: 'photo_wall', label: isHi ? 'फोटो वॉल आमंत्रण' : 'Photo Wall QR Alert' },
-                  { id: 'thank_you', label: isHi ? 'धन्यवाद संदेश' : 'Thank You Message' },
+                  { id: 'starting_soon' as const, label: isHi ? '15 मिनट में शुरू' : 'Starting in 15 mins' },
+                  { id: 'venue_update' as const, label: isHi ? 'स्थान / हॉल अपडेट' : 'Venue / Hall Shift' },
+                  { id: 'dress_code' as const, label: isHi ? 'ड्रेस कोड स्मरण' : 'Dress Code Reminder' },
+                  { id: 'photo_wall' as const, label: isHi ? 'फोटो वॉल आमंत्रण' : 'Photo Wall QR Alert' },
+                  { id: 'thank_you' as const, label: isHi ? 'धन्यवाद संदेश' : 'Thank You Message' },
                 ].map((tpl) => (
                   <button
                     key={tpl.id}
-                    onClick={() => setBroadcastTemplate(tpl.id as any)}
+                    onClick={() => setBroadcastTemplate(tpl.id)}
                     className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer ${
                       broadcastTemplate === tpl.id
                         ? 'border-[#1c5340] bg-[#1c5340]/10 text-[#1c5340] font-bold'
